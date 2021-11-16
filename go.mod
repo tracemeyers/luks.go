@@ -1,4 +1,4 @@
-module github.com/anatol/luks.go
+module github.com/tracemeyers/luks.go
 
 go 1.17
 
