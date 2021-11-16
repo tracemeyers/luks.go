@@ -3,8 +3,10 @@ package luks
 import (
 	"encoding/hex"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/anatol/devmapper.go"
 )
@@ -67,4 +69,26 @@ func (v *Volume) SetupMapper(name string) error {
 	uuid := fmt.Sprintf("CRYPT-%v-%v-%v", v.luksType, strings.ReplaceAll(v.uuid, "-", ""), name) // See dm_prepare_uuid()
 
 	return devmapper.CreateAndLoad(name, uuid, 0, table)
+}
+
+// MapperReady waits for the mapped device to be created. This is a temporary
+// workaround until devmapper does this. Use when the mapped device is not
+// created immediately upon `SetupMapper` return.
+func (v *Volume) MapperReady(name string, timeout time.Duration) bool {
+	exists := func() bool {
+		_, err := os.Stat(fmt.Sprintf("/dev/mapper/%s", name))
+		return err == nil
+	}
+
+	end := time.Now().Add(timeout)
+	for {
+		if exists() {
+			return true
+		}
+		if time.Now().After(end) {
+			break
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	return false
 }
