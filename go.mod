@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/anatol/devmapper.go v0.0.0-20210818022933-f8f04407d1ed
 	github.com/anatol/vmtest v0.0.0-20211004221854-3a36b6b86cc0
+	github.com/ncw/directio v1.0.5
 	github.com/stretchr/testify v1.7.0
 	github.com/tmc/scp v0.0.0-20170824174625-f7b48647feef
 	github.com/tych0/go-losetup v0.0.0-20170407175016-fc9adea44124
